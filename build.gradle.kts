@@ -3,13 +3,10 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72")
-        classpath("com.github.jengelman.gradle.plugins:shadow:5.1.0")
+        classpath("com.github.jengelman.gradle.plugins:shadow:5.2.0")
     }
 }
 
@@ -18,7 +15,7 @@ plugins {
     eclipse
     idea
     application
-    id("com.github.johnrengelman.shadow") version "5.1.0"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "xyz.rieproject"
@@ -35,9 +32,9 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.12.0")
     implementation("org.apache.logging.log4j:log4j-core:2.12.0")
     implementation("net.dv8tion:JDA:4.1.1_136")
-    implementation("com.jagrosh:jda-utilities-menu:3.0.3")
-    implementation("com.jagrosh:jda-utilities-commons:3.0.3")
-    implementation("com.jagrosh:jda-utilities-command:3.0.3")
+
+    // Util library
+    implementation("com.jagrosh:jda-utilities:3.0.3")
 
     // HikariCP for SQL Pooling
     implementation("com.zaxxer:HikariCP:3.3.1")

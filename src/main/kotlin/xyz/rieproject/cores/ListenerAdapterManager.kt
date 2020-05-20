@@ -9,21 +9,31 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.sharding.ShardManager
 import org.apache.logging.log4j.Logger
 import org.reflections.Reflections
-import xyz.rieproject.Application
 import xyz.rieproject.Config
+import xyz.rieproject.NeoClusterSharding
+import xyz.rieproject.sub.engines.GameCore
 import xyz.rieproject.utils.CConsole
 
 import java.lang.management.ManagementFactory
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     private val builder = CommandClientBuilder()
     private val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
     override fun onReady(event: ReadyEvent) {
         val selfUser = event.jda.selfUser
-        builder.setPrefix(Config.PREFIX)
-        builder.setAlternativePrefix("$")
+        builder
+            .setPrefix(Config.PREFIX)
+            .setAlternativePrefix("$")
+            .setLinkedCacheSize(0)
+            .setListener(listener)
+            .setScheduleExecutor(threadpool)
+
         jda.addEventListener(waiter)
         Reflections("xyz.rieproject.commands")
             .getSubTypesOf(Command::class.java)
@@ -33,8 +43,8 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
         Config.OWNER_ID.forEach {
             builder.setOwnerId(it.toString())
         }
-        val cbuild = builder.build()
-        jda.addEventListener(cbuild)
+        val clientBuilder = builder.build()
+        jda.addEventListener(clientBuilder)
         console.info(
             """
         |
@@ -47,6 +57,8 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
         |
         """.trimMargin("|")
         )
+
+        threadpool.scheduleWithFixedDelay({ System.gc() }, 12, 6, TimeUnit.HOURS)
     }
 
     override fun onShutdown(event: ShutdownEvent) {
@@ -58,6 +70,10 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     }
 
     companion object {
-        var waiter: EventWaiter = EventWaiter()
+        val waiter: EventWaiter = EventWaiter()
+        val gameSessions: HashMap<String, GameCore> = HashMap()
+        val listener = CommandExceptionListener()
+        val threadpool: ScheduledExecutorService = Executors.newScheduledThreadPool(100)
+        val shards: ShardManager = NeoClusterSharding.shards
     }
 }
