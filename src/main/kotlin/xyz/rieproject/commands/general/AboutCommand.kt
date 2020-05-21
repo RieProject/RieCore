@@ -33,6 +33,7 @@ class AboutCommand: Command() {
                             """
                                 おはよ, I am **Rie**#8161 (理恵), a bot designed to host your desired and prefered card games!
                                 I was written in Kotlin by **Riichi_Rusdiana**#6815 and **Stellarz_Munn**#4554 using [JDA](${JDAInfo.GITHUB}) and [JDA-Utilities](${JDAUtilitiesInfo.GITHUB})
+                                For more system-specific information, type `${event.client.prefix} stats`  
                                 Type `${event.client.prefix}
                                 """.trimIndent() + event.client
                                 .helpWord + "` for help and information.\n\n"

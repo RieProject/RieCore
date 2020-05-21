@@ -15,13 +15,14 @@
         </RollingFile>
 
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%highlight{%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta, TRACE=blue}] [%style{%pid}{cyan} - %style{%d{DATE}}{cyan}] [%t] %c{1} - %highlight{%msg}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=white, DEBUG=white, TRACE=blue}%n"/>        </Console>
+            <PatternLayout pattern="[%highlight{%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta, TRACE=blue}] [%style{%pid}{cyan} - %style{%d{DATE}}{cyan}] [%t] %c{1} - %highlight{%msg}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=white, DEBUG=white, TRACE=blue}%n"/>
+        </Console>
     </Appenders>
     <Loggers>
-        <Logger name="xyz.jdev" level="debug" additivity="true">
+        <Logger name="xyz.rieproject" level="debug" additivity="true">
             <appender-ref ref="fileLogger" level="debug" />
         </Logger>
-        <Root level="debug" additivity="false">
+        <Root level="info" additivity="false">
             <appender-ref ref="console" />
         </Root>
     </Loggers>

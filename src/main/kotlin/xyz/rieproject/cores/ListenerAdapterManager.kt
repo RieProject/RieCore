@@ -14,13 +14,16 @@ import org.apache.logging.log4j.Logger
 import org.reflections.Reflections
 import xyz.rieproject.Config
 import xyz.rieproject.NeoClusterSharding
+import xyz.rieproject.models.DataMap
 import xyz.rieproject.sub.engines.GameCore
 import xyz.rieproject.utils.CConsole
 
 import java.lang.management.ManagementFactory
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashMap
 
 class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     private val builder = CommandClientBuilder()
@@ -40,8 +43,9 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
             .forEach {
                 builder.addCommand(it.newInstance())
             }
+        builder.setOwnerId(Config.OWNER_ID[0].toString())
         Config.OWNER_ID.forEach {
-            builder.setOwnerId(it.toString())
+            builder.setCoOwnerIds(it.toString())
         }
         val clientBuilder = builder.build()
         jda.addEventListener(clientBuilder)
@@ -70,6 +74,13 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     }
 
     companion object {
+        val connectionManager: ConnectionManager = ConnectionManager(Config.JDBC_URI, Config.JDBC_USER, Config.JDBC_PASS)
+
+        // Initialize databases
+        val coreDatabase = DataMap("core", connectionManager.datasource)
+        val guildDatabase = DataMap("guild", connectionManager.datasource)
+        val dailyDatabase = DataMap("daily", connectionManager.datasource)
+
         val waiter: EventWaiter = EventWaiter()
         val gameSessions: HashMap<String, GameCore> = HashMap()
         val listener = CommandExceptionListener()

@@ -14,8 +14,15 @@ object Config {
     val TOKEN = System.getenv("TOKEN")
     val OWNER_ID = listOf<Long>(337028800929857536.toLong(), 712222723169845319.toLong())
     val BOT_INVITE = "https://discordapp.com/oauth2/authorize?client_id=548464135638220810&permissions=0&scope=bot"
+    val OS = System.getProperty("os.name").toLowerCase()
 
-    var JDBC_URI = if (System.getenv("DATABASE_URI").isNullOrEmpty()) "jdbc:postgresql://localhost/cardwars" else System.getenv("DATABASE_URI")
+    var MONGO_URI = if (System.getenv("DATABASE_URI").isNullOrEmpty()) "localhost" else System.getenv("DATABASE_URI")
+    var MONGO_PORT = if (System.getenv("DATABASE_PORT").isNullOrEmpty()) 27017 else System.getenv("DATABASE_PORT").toInt()
+    var MONGO_USER = if (System.getenv("DATABASE_USER").isNullOrEmpty()) "rie" else System.getenv("DATABASE_USER")
+    var MONGO_PASS = if (System.getenv("DATABASE_PASS").isNullOrEmpty()) "rererere".toCharArray() else System.getenv("DATABASE_PASS").toCharArray()
+    val DEFAULT_DB = "rie"
+
+    var JDBC_URI = if (System.getenv("DATABASE_URI").isNullOrEmpty()) "jdbc:postgresql://localhost/rie" else System.getenv("DATABASE_URI")
     var JDBC_USER = if (System.getenv("DATABASE_USER").isNullOrEmpty()) "postgres" else System.getenv("DATABASE_URI")
     var JDBC_PASS = if (System.getenv("DATABASE_PASS").isNullOrEmpty()) null else System.getenv("DATABASE_URI")
 
