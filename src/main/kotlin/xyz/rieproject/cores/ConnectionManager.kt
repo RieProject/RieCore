@@ -1,58 +1,33 @@
 package xyz.rieproject.cores
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
-import net.dv8tion.jda.api.events.ReadyEvent
-import net.dv8tion.jda.api.hooks.ListenerAdapter
-import xyz.jdev.utils.ExitStatus
+import com.mongodb.MongoClientSettings
+import com.mongodb.MongoCredential
+import com.mongodb.ServerAddress
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoClients
+import org.apache.logging.log4j.Logger
+import xyz.rieproject.Config
 import xyz.rieproject.utils.CConsole
 import java.lang.management.ManagementFactory
-import java.sql.Connection
-import java.sql.SQLInvalidAuthorizationSpecException
-import java.sql.SQLNonTransientConnectionException
-import java.sql.SQLSyntaxErrorException
-import kotlin.system.exitProcess
-import kotlin.system.measureTimeMillis
+import java.util.*
 
-class ConnectionManager(val DB_URL: String?, val DB_USER: String?, val DB_PASS: String?) {
-    private val console = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
-    lateinit var datasource: HikariDataSource
-    lateinit var connection: Connection
-    private val config = HikariConfig()
-
+class ConnectionManager {
+    private val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
     init {
-        initialize()
+        val creds = MongoCredential.createScramSha256Credential(Config.MONGO_USER, "rie", Config.MONGO_PASS)
+        mongoClient = MongoClients.create(
+                MongoClientSettings.builder()
+                    .credential(creds)
+                    .applyToClusterSettings {
+                        console.info("Applying configuration to Cluster Settings..")
+                        it.hosts(Arrays.asList(
+                            ServerAddress(Config.MONGO_URI, Config.MONGO_PORT)
+                        ))
+                    }.build()
+                )
+        console.info("Database connected! Verified with ${Config.MONGO_USER} username via \"rie\" database!")
     }
-
-    private fun connect() {
-        console.info("Connecting to the connection... ")
-        val milli = measureTimeMillis {
-            if (DB_URL?.isEmpty() != false) {
-                datasource = HikariDataSource()
-                connection = datasource.connection
-            } else {
-                config.jdbcUrl = DB_URL
-                config.username = DB_USER
-                config.password = DB_PASS
-                datasource = HikariDataSource(config)
-                connection = datasource.connection
-            }
-        }
-        console.info("Connection established! (${milli}ms)")
+    companion object {
+        lateinit var mongoClient: MongoClient
     }
-    private fun initialize() {
-        try {
-            connect()
-        } catch (ex: SQLInvalidAuthorizationSpecException) {
-            console.error(ex.message)
-            exitProcess(ExitStatus.SQL_INVALID_PASSWORD.code)
-        } catch (ex: SQLNonTransientConnectionException) {
-            console.error(ex.message)
-            exitProcess(ExitStatus.SQL_UNKNOWN_HOST.code)
-        } catch (ex: SQLSyntaxErrorException) {
-            console.error(ex.message)
-            exitProcess(ExitStatus.SQL_UNKNOWN_DATABASE.code)
-        }
-    }
-
 }

@@ -36,9 +36,8 @@ dependencies {
     // Util library
     implementation("com.jagrosh:jda-utilities:3.0.3")
 
-    // HikariCP for SQL Pooling
-    implementation("com.zaxxer:HikariCP:3.3.1")
-    implementation("org.postgresql:postgresql:42.2.6")
+    // Mongodb Sync
+    implementation("org.mongodb:mongodb-driver-sync:4.0.3")
 
     implementation("org.apache.commons:commons-lang3:3.6")
     implementation("org.reflections:reflections:0.9.10")

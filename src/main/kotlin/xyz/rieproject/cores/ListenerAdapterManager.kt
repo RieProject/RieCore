@@ -11,15 +11,14 @@ import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.sharding.ShardManager
 import org.apache.logging.log4j.Logger
+import org.bson.Document
 import org.reflections.Reflections
 import xyz.rieproject.Config
 import xyz.rieproject.NeoClusterSharding
-import xyz.rieproject.models.DataMap
 import xyz.rieproject.sub.engines.GameCore
 import xyz.rieproject.utils.CConsole
 
 import java.lang.management.ManagementFactory
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -28,6 +27,7 @@ import kotlin.collections.HashMap
 class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     private val builder = CommandClientBuilder()
     private val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
+    private val database = ConnectionManager.mongoClient
     override fun onReady(event: ReadyEvent) {
         val selfUser = event.jda.selfUser
         builder
@@ -74,13 +74,6 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     }
 
     companion object {
-        val connectionManager: ConnectionManager = ConnectionManager(Config.JDBC_URI, Config.JDBC_USER, Config.JDBC_PASS)
-
-        // Initialize databases
-        val coreDatabase = DataMap("core", connectionManager.datasource)
-        val guildDatabase = DataMap("guild", connectionManager.datasource)
-        val dailyDatabase = DataMap("daily", connectionManager.datasource)
-
         val waiter: EventWaiter = EventWaiter()
         val gameSessions: HashMap<String, GameCore> = HashMap()
         val listener = CommandExceptionListener()
