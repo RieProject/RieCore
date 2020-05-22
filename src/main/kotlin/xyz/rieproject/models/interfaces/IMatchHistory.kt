@@ -1,4 +1,4 @@
-package xyz.rieproject.models
+package xyz.rieproject.models.interfaces
 
 interface IMatchHistory {
     val _id: String
