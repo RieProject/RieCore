@@ -1,13 +1,6 @@
 package xyz.rieproject.models.interfaces.cah
 
 interface IMatchHistory {
-    val _id: String
-
-    /**
-     * ID Match setiap kali bertanding
-     */
-    val id_match: String
-
     /**
      * Banyak black card yang dibuang dalam satu game
      */

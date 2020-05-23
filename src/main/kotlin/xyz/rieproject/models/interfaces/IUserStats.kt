@@ -1,12 +1,10 @@
 package xyz.rieproject.models.interfaces
 
 interface IUserStats {
-    val _id: String
-
     /**
      * Snowflake User dari Discord.
      */
-    val id_user: String
+    val _id: String
 
     /**
      * Kapan user ini pertama kali main.

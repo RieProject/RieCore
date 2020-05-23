@@ -1,17 +1,15 @@
 package xyz.rieproject.models.interfaces
 
 interface IGuildData {
+    /**
+     * Guild id, wajib ada pas ditambahin data
+     */
     val _id: String
 
     /**
      * Bahasa yang digunakan. Default wajib EN.
      */
     val locale: String
-
-    /**
-     * Guild id, wajib ada pas ditambahin data
-     */
-    val guild_id: String
 
     /**
      * Role untuk join ke lobby
