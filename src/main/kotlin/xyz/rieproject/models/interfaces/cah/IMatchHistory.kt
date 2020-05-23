@@ -1,6 +1,6 @@
 package xyz.rieproject.models.interfaces.cah
 
-interface MatchHistory {
+interface IMatchHistory {
     val _id: String
 
     /**
@@ -26,5 +26,5 @@ interface MatchHistory {
     /**
      * Ringkasan match
      */
-    val match: List<MatchDescription>
+    val matches: List<IMatchDescription>
 }

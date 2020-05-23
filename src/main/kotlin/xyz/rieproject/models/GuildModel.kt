@@ -1,6 +1,8 @@
 package xyz.rieproject.models
 
-import xyz.rieproject.models.interfaces.GuildData
+import xyz.rieproject.models.interfaces.IGuildData
 
-class GuildModel(data: GuildData): Model() {
+class GuildModel(override val data: IGuildData?): Model<IGuildData?>("guild") {
+    init {
+    }
 }

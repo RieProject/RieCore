@@ -1,6 +1,6 @@
 package xyz.rieproject.models.interfaces.cah
 
-interface MatchDescription {
+interface IMatchDescription {
     /**
      * Banyak vote yang dikumpulkan
      */

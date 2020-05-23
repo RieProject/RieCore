@@ -3,6 +3,7 @@ package xyz.rieproject.cores
 import com.jagrosh.jdautilities.command.Command
 import com.jagrosh.jdautilities.command.CommandClientBuilder
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter
+import com.mongodb.client.MongoDatabase
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
@@ -27,8 +28,10 @@ import kotlin.collections.HashMap
 class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     private val builder = CommandClientBuilder()
     private val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
-    private val database = ConnectionManager.mongoClient
+    private lateinit var database: MongoDatabase
     override fun onReady(event: ReadyEvent) {
+        connectionManager = ConnectionManager()
+        database = connectionManager.getDatabase()
         val selfUser = event.jda.selfUser
         builder
             .setPrefix(Config.PREFIX)
@@ -74,6 +77,7 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     }
 
     companion object {
+        lateinit var connectionManager: ConnectionManager
         val waiter: EventWaiter = EventWaiter()
         val gameSessions: HashMap<String, GameCore> = HashMap()
         val listener = CommandExceptionListener()

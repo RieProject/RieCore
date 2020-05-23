@@ -1,6 +1,6 @@
 package xyz.rieproject.models.interfaces
 
-interface UserStats {
+interface IUserStats {
     val _id: String
 
     /**

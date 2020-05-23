@@ -5,6 +5,7 @@ import com.mongodb.MongoCredential
 import com.mongodb.ServerAddress
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
+import com.mongodb.client.MongoDatabase
 import org.apache.logging.log4j.Logger
 import xyz.rieproject.Config
 import xyz.rieproject.utils.CConsole
@@ -27,7 +28,14 @@ class ConnectionManager {
                 )
         console.info("Database connected! Verified with ${Config.MONGO_USER} username via \"rie\" database!")
     }
+
+    fun getDatabase(): MongoDatabase {
+        database = mongoClient.getDatabase("rie")
+        return database
+    }
+
     companion object {
         lateinit var mongoClient: MongoClient
+        lateinit var database: MongoDatabase
     }
 }

@@ -1,6 +1,6 @@
 package xyz.rieproject.models.interfaces
 
-interface GuildData {
+interface IGuildData {
     val _id: String
 
     /**
