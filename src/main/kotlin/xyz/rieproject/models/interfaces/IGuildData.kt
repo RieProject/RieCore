@@ -17,7 +17,7 @@ interface IGuildData {
     val role_id: String?
 
     /**
-     * Channel tumpangan Rie untuk lobby
+     * Category tumpangan Rie untuk lobby.
      */
-    val channel_id: String?
+    val category_id: String?
 }
