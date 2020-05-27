@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.dokka.gradle.DokkaTask
 
 buildscript {
     repositories {
@@ -12,10 +13,12 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.3.72"
+    kotlin("plugin.serialization") version "1.3.70"
     eclipse
     idea
     application
     id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("org.jetbrains.dokka") version "0.10.1"
 }
 
 group = "xyz.rieproject"
@@ -28,6 +31,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.12.0")
     implementation("org.apache.logging.log4j:log4j-api:2.12.0")
     implementation("org.apache.logging.log4j:log4j-core:2.12.0")
@@ -38,6 +42,7 @@ dependencies {
 
     // Mongodb Sync
     implementation("org.mongodb:mongodb-driver-sync:4.0.3")
+    implementation("org.litote.kmongo:kmongo:4.0.1")
 
     implementation("org.apache.commons:commons-lang3:3.6")
     implementation("org.reflections:reflections:0.9.10")
@@ -53,6 +58,10 @@ tasks {
     }
     build {
         dependsOn(shadowJar)
+    }
+    val dokka by getting(DokkaTask::class) {
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
     }
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"

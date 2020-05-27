@@ -9,7 +9,7 @@ interface IGuildData {
     /**
      * Bahasa yang digunakan. Default wajib EN.
      */
-    val locale: String
+    val locale: String?
 
     /**
      * Role untuk join ke lobby

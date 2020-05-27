@@ -12,11 +12,10 @@ import net.dv8tion.jda.api.events.ShutdownEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.sharding.ShardManager
 import org.apache.logging.log4j.Logger
-import org.bson.Document
 import org.reflections.Reflections
 import xyz.rieproject.Config
 import xyz.rieproject.NeoClusterSharding
-import xyz.rieproject.sub.engines.GameCore
+import xyz.rieproject.sub.engines.IGame
 import xyz.rieproject.utils.CConsole
 
 import java.lang.management.ManagementFactory
@@ -52,6 +51,7 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
         }
         val clientBuilder = builder.build()
         jda.addEventListener(clientBuilder)
+        jda.addEventListener(guildManager)
         console.info(
             """
         |
@@ -78,8 +78,9 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
 
     companion object {
         lateinit var connectionManager: ConnectionManager
+        val guildManager = GuildManager()
         val waiter: EventWaiter = EventWaiter()
-        val gameSessions: HashMap<String, GameCore> = HashMap()
+        val GAME_SESSIONS: HashMap<String, IGame> = HashMap()
         val listener = CommandExceptionListener()
         val threadpool: ScheduledExecutorService = Executors.newScheduledThreadPool(100)
         val shards: ShardManager = NeoClusterSharding.shards
