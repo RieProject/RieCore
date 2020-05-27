@@ -40,7 +40,7 @@ class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
             .setScheduleExecutor(threadpool)
 
         jda.addEventListener(waiter)
-        Reflections("xyz.rieproject.commands")
+        Reflections("xyz.rieproject.commands.parents")
             .getSubTypesOf(Command::class.java)
             .forEach {
                 builder.addCommand(it.newInstance())

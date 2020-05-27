@@ -1,4 +1,4 @@
-package xyz.rieproject.commands.general
+package xyz.rieproject.commands.parents.general
 
 import com.jagrosh.jdautilities.command.Command
 import com.jagrosh.jdautilities.command.CommandEvent
@@ -8,9 +8,6 @@ import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.sharding.ShardManager
-import org.apache.logging.log4j.core.tools.picocli.CommandLine
-import xyz.rieproject.Application
-import xyz.rieproject.NeoClusterSharding
 import xyz.rieproject.cores.ListenerAdapterManager
 import java.awt.Color
 

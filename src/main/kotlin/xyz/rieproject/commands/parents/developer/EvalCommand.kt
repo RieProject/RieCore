@@ -1,4 +1,4 @@
-package xyz.rieproject.commands.developer
+package xyz.rieproject.commands.parents.developer
 
 import com.jagrosh.jdautilities.command.Command
 import com.jagrosh.jdautilities.command.CommandEvent
