@@ -12,11 +12,6 @@ interface IGuildData {
     val locale: String?
 
     /**
-     * Role untuk join ke lobby
-     */
-    val role_id: String?
-
-    /**
      * Category tumpangan Rie untuk lobby.
      */
     val category_id: String?

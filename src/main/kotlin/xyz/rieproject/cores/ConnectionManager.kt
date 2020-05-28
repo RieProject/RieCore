@@ -7,20 +7,20 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.result.DeleteResult
 import com.mongodb.client.result.InsertOneResult
 import com.mongodb.client.result.UpdateResult
 import org.apache.logging.log4j.Logger
-import org.litote.kmongo.KMongo
-import org.litote.kmongo.findOne
-import org.litote.kmongo.getCollection
-import org.litote.kmongo.updateOneById
+import org.bson.conversions.Bson
+import org.litote.kmongo.*
 import xyz.rieproject.Config
+import xyz.rieproject.models.GuildModel
 import xyz.rieproject.utils.CConsole
 import java.lang.management.ManagementFactory
 import java.util.*
 
 class ConnectionManager {
-    private val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
+    val console: Logger = CConsole(ManagementFactory.getRuntimeMXBean().name, this.javaClass).sfl4jlogger
     init {
         val creds = MongoCredential.createScramSha256Credential(Config.MONGO_USER, "rie", Config.MONGO_PASS)
         mongoClient = KMongo.createClient(
@@ -41,11 +41,11 @@ class ConnectionManager {
         return database
     }
 
-    inline fun <reified T: kotlin.Any> getCollection(): MongoCollection<T> {
+    inline fun <reified T: Any> getCollection(): MongoCollection<T> {
         return database.getCollection<T>()
     }
 
-    inline fun <reified T: kotlin.Any> getCollection(collection_name: String): MongoCollection<T> {
+    inline fun <reified T: Any> getCollection(collection_name: String): MongoCollection<T> {
         return database.getCollection<T>(collection_name)
     }
 
@@ -53,15 +53,49 @@ class ConnectionManager {
         return getCollection<T>().findOne(eq("_id", _id))
     }
 
-    inline fun <reified T: Any> set(_id: String, data: T): T? {
-        var oldData = get<T>(_id)
-        if (oldData === null) {
-            getCollection<T>().insertOne(data)
+    inline fun <reified T: Any> set(_id: String, data: T): InsertOneResult? {
+        var result: InsertOneResult? = null
+        if (!exists<T>(_id)) {
+            result = getCollection<T>().insertOne(data)
         } else {
-            oldData = data
             getCollection<T>().updateOneById(_id, data)
         }
-        return oldData
+        return result
+    }
+
+    inline fun <reified T: Any> set(_id: String, key: String, value: String): UpdateResult? {
+        var result: UpdateResult? = null
+        if (exists<T>(_id)) {
+            result = getCollection<T>().updateOne("{_id:'$_id'}", "{\$set:{$key:'$value'}}")
+        } else {
+            console.error("Use 'set(id, data)' for insert instead of 'set(id, key, value)' you damn moron!")
+        }
+        return result
+    }
+
+    inline fun <reified T: Any> update(filter: Bson, data: Bson): UpdateResult? {
+        val col = getCollection<T>()
+        return col.updateOne(filter, data)
+    }
+
+    inline fun <reified T: Any> delete(_id: String): DeleteResult? {
+        return getCollection<T>().deleteOne("{_id:'$_id'}")
+    }
+
+    inline fun <reified T: Any> delete(_id: List<String>): MutableList<DeleteResult>? {
+        val result = mutableListOf<DeleteResult>()
+        _id.forEach {
+            val res = delete<T>(it)
+            if (res != null) {
+                result.add(res)
+            }
+        }
+        return result
+    }
+
+    inline fun <reified T: Any> exists(_id: String): Boolean {
+        get<T>(_id) ?: return false
+        return true
     }
 
     companion object {
