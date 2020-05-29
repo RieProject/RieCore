@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger
 import org.bson.conversions.Bson
 import org.litote.kmongo.*
 import xyz.rieproject.Config
-import xyz.rieproject.models.GuildModel
 import xyz.rieproject.utils.CConsole
 import java.lang.management.ManagementFactory
 import java.util.*

@@ -1,7 +1,6 @@
 package xyz.rieproject.sub.engines.cah
 
 import net.dv8tion.jda.api.entities.User
-import xyz.rieproject.sub.engines.IGame
 import xyz.rieproject.sub.engines.IPlayer
 
 @ExperimentalStdlibApi

@@ -17,12 +17,10 @@ import xyz.rieproject.Config
 import xyz.rieproject.NeoClusterSharding
 import xyz.rieproject.sub.engines.IGame
 import xyz.rieproject.utils.CConsole
-
 import java.lang.management.ManagementFactory
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
-import kotlin.collections.HashMap
 
 class ListenerAdapterManager(private val jda: JDA): ListenerAdapter() {
     private val builder = CommandClientBuilder()
